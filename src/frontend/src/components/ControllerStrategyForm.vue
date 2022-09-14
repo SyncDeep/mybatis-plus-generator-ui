@@ -1,18 +1,18 @@
 <template>
   <el-form ref="editForm" :model="form" label-width="180px" size="mini">
-    <el-form-item label="Controller的超类名称">
+    <el-form-item label="Controller's superclass name">
       <el-input v-model="form.superControllerClass"></el-input>
     </el-form-item>
-    <el-form-item label="启用REST接口注解" placeholder>
+    <el-form-item label="Enable REST interface annotation" placeholder>
       <el-switch v-model="form.restControllerStyle"></el-switch>
-      <help-tip content="用@RestController注解替换@Controller"></help-tip>
+      <help-tip content="Replace @Controller with @RestController annotation"></help-tip>
     </el-form-item>
-    <el-form-item label="Mapping Url格式转换" placeholder>
+    <el-form-item label="Mapping Url Format Conversion" placeholder>
       <el-switch v-model="form.controllerMappingHyphenStyle"></el-switch>
-      <help-tip content="驼峰转连字符，如：/managerUserActionHistory -> /manager-user-action-history "></help-tip>
+      <help-tip content="CamelCase to hyphen, sample：/managerUserActionHistory -> /manager-user-action-history "></help-tip>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">保存</el-button>
+      <el-button type="primary" @click="onSubmit">Save</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -48,7 +48,7 @@ export default {
       axios
         .post("/api/output-file-info/save-controller-strategy", this.form)
         .then(res => {
-          this.$message.success("信息保存成功");
+          this.$message.success("Message saved successfully");
         });
     }
   }

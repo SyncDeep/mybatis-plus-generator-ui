@@ -1,13 +1,13 @@
 <template>
   <el-form ref="editForm" :model="form" label-width="180px" size="mini">
-    <el-form-item label="Entity的超类名称">
+    <el-form-item label="Entity's superclass name">
       <el-input v-model="form.superEntityClass"></el-input>
     </el-form-item>
-    <el-form-item label="Entity的公共字段">
+    <el-form-item label="Public fields of Entity">
       <el-input v-model="superEntityColumn" style="width: 200px"></el-input>
-      <el-button @click="addNewColumn">新增字段</el-button>
+      <el-button @click="addNewColumn">Add field</el-button>
       <help-tip
-        content="公共字段默认是从超类中继承的，即使表里面存在相关字段也不会生成到Entity中（注意，要配置数据库原始字段名，不是超类中的属性名！！）"
+        content="Public fields are inherited from the superclass by default. Even if there are related fields in the table, they will not be generated into the Entity (note that you need to configure the original field name of the database, not the property name in the superclass!!)"
       ></help-tip>
       <div style="margin-top: 5px">
         <el-tag
@@ -20,22 +20,22 @@
         >
       </div>
     </el-form-item>
-    <el-form-item label="需要自动填充的字段">
+    <el-form-item label="Fields to be autofilled">
       <el-input v-model="tableFillCol" style="width: 300px">
         <el-select
           style="width: 120px"
           v-model="tableFillType"
           slot="prepend"
-          placeholder="请选择"
+          placeholder="Please choose"
         >
           <el-option label="insert_update" value="insert_update"></el-option>
           <el-option label="insert" value="insert"></el-option>
           <el-option label="update" value="update"></el-option>
         </el-select>
       </el-input>
-      <el-button @click="addNewtableFill">新增字段</el-button>
+      <el-button @click="addNewtableFill">Add Field</el-button>
       <help-tip
-        content="设置了自定填充的字段，将会在字段上自动添加对应的注解项，例如：@TableField(fill = FieldFill.INSERT_UPDATE)"
+        content="A field with a custom fill will be automatically added to the field, Example：@TableField(fill = FieldFill.INSERT_UPDATE)"
       ></help-tip>
       <div style="margin-top: 5px">
         <el-tag
@@ -48,44 +48,44 @@
         >
       </div>
     </el-form-item>
-    <el-form-item label="标识乐观锁的字段名">
+    <el-form-item label="Field name that identifies optimistic locking">
       <el-input v-model="form.versionFieldName"></el-input>
     </el-form-item>
-    <el-form-item label="标识逻辑删除的字段名">
+    <el-form-item label="Identifies the field name to delete">
       <el-input v-model="form.logicDeleteFieldName"></el-input>
     </el-form-item>
-    <el-form-item label="是否生成serialVersionUID" placeholder>
+    <el-form-item label="Whether to generate serialVersionUID" placeholder>
       <el-switch v-model="form.entitySerialVersionUID"></el-switch>
     </el-form-item>
-    <el-form-item label="是否生成字段名常量" placeholder>
+    <el-form-item label="Whether to generate field name constants" placeholder>
       <el-switch v-model="form.entityColumnConstant"></el-switch>
       <help-tip
-        content="为每个字段生成一个静态常量，如：public static final String ID = 'test_id'"
+        content="Generate a static constant for each field, Example：public static final String ID = 'test_id'"
       ></help-tip>
     </el-form-item>
-    <el-form-item label="是否启用ActiveRecord模式" placeholder>
+    <el-form-item label="Enable ActiveRecord mode" placeholder>
       <el-switch v-model="form.activeRecord"></el-switch>
     </el-form-item>
-    <el-form-item label="是否启用构建者模式" placeholder>
+    <el-form-item label="Enable builder mode" placeholder>
       <el-switch v-model="form.entityBuilderModel"></el-switch>
     </el-form-item>
-    <el-form-item label=" 是否启用Lombok注解" placeholder>
+    <el-form-item label="Enable Lombok annotation" placeholder>
       <el-switch v-model="form.entityLombokModel"></el-switch>
     </el-form-item>
-    <el-form-item label="是否移除字段的is前缀" placeholder>
+    <el-form-item label="Whether to remove the is prefix of the field" placeholder>
       <el-switch v-model="form.entityBooleanColumnRemoveIsPrefix"></el-switch>
       <help-tip
-        content="比如 : 数据库字段名称 : 'is_xxx',类型为 : tinyint. 在映射实体的时候则会去掉is,在实体类中映射最终结果为 xxx"
+        content="Example: database field name: 'is_xxx', type: tinyint. When mapping entities, is will be removed, and the final result of mapping in the entity class is xxx"
       ></help-tip>
     </el-form-item>
-    <el-form-item label="是否强制生成字段名注解" placeholder>
+    <el-form-item label="Whether to force field name annotation" placeholder>
       <el-switch v-model="form.entityTableFieldAnnotationEnable"></el-switch>
     </el-form-item>
-    <el-form-item label="是否生成swagger2注解" placeholder>
+    <el-form-item label="Whether to generate swagger2 annotations" placeholder>
       <el-switch v-model="form.swagger2"></el-switch>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">保存</el-button>
+      <el-button type="primary" @click="onSubmit">Save</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -142,7 +142,7 @@ export default {
         }
         this.superEntityColumn = "";
       } else {
-        this.$message.warning("请输入字段名");
+        this.$message.warning("Please enter a field name");
       }
     },
     removeColumn(col) {
@@ -166,7 +166,7 @@ export default {
         }
         this.tableFillCol = "";
       } else {
-        this.$message.warning("请输入字段名");
+        this.$message.warning("Please enter a field name");
       }
     },
     removeTableFill(col) {
@@ -179,7 +179,7 @@ export default {
       axios
         .post("/api/output-file-info/save-entity-strategy", this.form)
         .then((res) => {
-          this.$message.success("信息保存成功");
+          this.$message.success("Message saved successfully");
         });
     },
   },

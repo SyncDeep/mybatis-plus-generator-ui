@@ -13,11 +13,11 @@
         />
       </svg>
       <div class="title" style="font-size:16px;">
-        <span v-if="error.statusCode === 404">该页面不存在</span>
-        <span v-else>应用发生错误异常</span>
+        <span v-if="error.statusCode === 404">The  page does not exist</span>
+        <span v-else>Application error exception</span>
       </div>
       <p v-if="statusCode === 404" class="description">
-        <a class="error-link" href="/">回到首页</a>
+        <a class="error-link" href="/">Back to home page</a>
       </p>
     </div>
   </div>

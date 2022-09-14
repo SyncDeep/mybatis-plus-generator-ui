@@ -5,11 +5,11 @@ const {
 const app = require('express')()
 const port = process.env.PORT || 3000
 var proxyMiddleware = require('http-proxy-middleware')
-// 传入配置初始化 Nuxt.js 实例
+// Initialize Nuxt.js instance by passing in configuration
 let config = require('./nuxt.config.js')
 const nuxt = new Nuxt(config)
 
-// proxy api requests这里就是添加的proxyTable中间价的设置了
+// proxy api requests here is the setting of the added proxyTable middle price
 var proxyTable = config.proxy
 Object.keys(proxyTable).forEach(function (context) {
   var options = proxyTable[context]
@@ -20,9 +20,9 @@ Object.keys(proxyTable).forEach(function (context) {
   }
   app.use(proxyMiddleware(options.filter || context, options))
 })
-app.use(nuxt.render) //这里是添加nuxt渲染层服务的中间件
+app.use(nuxt.render) //Here is the middleware that adds the nuxt rendering layer service
 
-// 在开发模式下进行编译
+// Compile in development mode
 
 new Builder(nuxt).build()
   .catch((error) => {
@@ -31,6 +31,6 @@ new Builder(nuxt).build()
   })
 
 
-// 监听指定端口
+// listen on specified port
 app.listen(port, '0.0.0.0')
-console.log('服务器运行于 localhost:' + port)
+console.log('The server runs on localhost:' + port)

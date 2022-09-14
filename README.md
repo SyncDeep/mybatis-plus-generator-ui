@@ -1,10 +1,9 @@
 ## mybatis-plus-generator-ui
- 提供交互式的Web UI用于生成兼容mybatis-plus框架的相关功能代码，包括Entity,Mapper,Mapper.xml,Service,Controller等
- ，可以自定义模板以及各类输出参数，也可通过SQL查询语句直接生成代码。
+Provides an interactive Web UI for generating related functional codes compatible with the mybatis-plus framework, including Entity, Mapper, Mapper.xml, Service, Controller, etc. You can customize templates and various output parameters, or directly through SQL query statements Generate code.
  
-## 使用方法
+## Instructions
 
-1.  引入maven的相关依赖，注意scope只需要写test就可以了
+1.  Introduce the relevant dependencies of maven, note that the scope only needs to write test.
 
 ```xml
  <dependency>
@@ -15,7 +14,7 @@
  </dependency>
 ```
 
-2.  在项目的test目录新建一个启动类，代码示例如下：
+2. Create a new startup class in the test directory of the project. The code example is as follows:
 
 ```java
 public class GeberatorUIServer {
@@ -25,19 +24,19 @@ public class GeberatorUIServer {
                 .userName("root")
                 .password("root")
                 .driverClassName("com.mysql.cj.jdbc.Driver")
-                 //数据库schema，POSTGRE_SQL,ORACLE,DB2类型的数据库需要指定
+                 //Database schema, POSTGRE_SQL, ORACLE, DB2 type databases need to be specified
                 .schemaName("myBusiness")
-                 //如果需要修改各类生成文件的默认命名规则，可自定义一个NameConverter实例，覆盖相应的名称转换方法：                
+                 //If you need to modify the default naming rules of various generated files, you can customize a NameConverter instance to override the corresponding name conversion method:                
                 .nameConverter(new NameConverter() {
                     /**
-                     * 自定义Service类文件的名称规则
+                     * Name rules for custom Service class files
                      */
                     @Override
                     public String serviceNameConvert(String tableName) {
                         return this.entityNameConvert(tableName) + "Service";
                     }
                     /**
-                     * 自定义Controller类文件的名称规则
+                     * Custom Controller class file name rules
                      */
                     @Override
                     public String controllerNameConvert(String tableName) {
@@ -53,58 +52,58 @@ public class GeberatorUIServer {
 }
 ```
 
-**GeneratorConfig**还包含一些基本的配置参数以及各个可扩展的接口，比如自定义模板参数，具体的说明可查看源码注释。
+**GeneratorConfig**also includes some basic configuration parameters and various extensible interfaces, such as custom template parameters. For specific instructions, see the source code comments.
 
-3.  运行该启动类，启动一个Generator Server。然后访问 [http://localhost:8068](http://localhost:8068/) （端口是可配置的）即可进入到管理界面。
+3. Run the startup class to start a Generator Server. Then visit [http://localhost:8068](http://localhost:8068/) (the port is configurable) to enter the management interface.
 
-#### 更新
-**1.4.0**版本之后，可支持将GeberatorUIServer独立部署为一个单独的spring boot项目，通过页面指定目标项目根目录的方式为多个项目提供源码生成服务。
+#### Renew
+**1.4.0**GeberatorUIServer can be independently deployed as a separate spring boot project to provide source code generation services for multiple projects by specifying the root directory of the target project on the page.
 
-## 主要功能
-1. **数据表的查询和浏览**：可以直接浏览和查询配置的数据源的数据表信息，可选择一个或多个生成模板代码：
+## The main function
+1. **Data table query and browsing**：You can directly browse and query the data table information of the configured data source, and you can select one or more generated template codes:
 
 ![数据表查询](https://gitee.com/davidfantasy/mybatis-plus-generator-ui/raw/master/imgs/table-list.png)
 
-2. **输出文件的配置**：内置Entity,Mapper,Service,Controller等6种类型代码的模板配置，可以上传模板进行替换，并修改各类参数，配置参数已经按照影响的文件类型重新进行了分类，并加入了部分文本说明；也可以自行添加其它类型的自定义输出文件。所有的配置项都会按照项目包名进行保存，只需一次性设置就可以了。
+2. **Configuration of output files**： template configuration of built-in 6 types of codes such as Entity, Mapper, Service, Controller, etc., templates can be uploaded for replacement, and various parameters can be modified. The configuration parameters have been reclassified according to the affected file types, and added Part of the text description; you can also add other types of custom output files yourself. All configuration items will be saved according to the project package name, and only need to be set once.
 
 ![输出文件类型配置](https://gitee.com/davidfantasy/mybatis-plus-generator-ui/raw/master/imgs/output-config.png)
 
 ![文件输出选项配置](https://gitee.com/davidfantasy/mybatis-plus-generator-ui/raw/master/imgs/strategy.png)
 
-3. **代码生成选项**：将每次生成代码时可能变动的内容加入到代码生成选项中，方便调整每次的生成策略，比如：是否覆盖原文件，生成文件的种类等等：
+3. **Code generation options **：Add the content that may change each time the code is generated to the code generation options to facilitate the adjustment of each generation strategy, such as: whether to overwrite the original file, the type of the generated file, etc.:
 
 ![代码生成选项](https://gitee.com/davidfantasy/mybatis-plus-generator-ui/raw/master/imgs/generator-options.png)
 
-4. **SQL结果集自动生成代码**：通过输入查询SQL，可自动在Mapper（Xml及Java）中生成对应的查询方法，DTO对象和ResultMap（结果集映射配置）
+4. **SQL result set automatic code generation**：By entering query SQL, the corresponding query method, DTO object and ResultMap (result set mapping configuration) can be automatically generated in Mapper (Xml and Java)
 
 ![SQL编辑](https://gitee.com/davidfantasy/mybatis-plus-generator-ui/raw/master/imgs/SQL-edit.png)
 
 ![SQL代码生成选项](https://gitee.com/davidfantasy/mybatis-plus-generator-ui/raw/master/imgs/SQL-generator-options.png)
 
-5. **动态SQL增强**：自动识别含有mybatis动态参数的where条件，转换为mybatis的动态SQL条件
+5. **Dynamic SQL enhancement**：automatically identify where conditions containing mybatis dynamic parameters and convert them to dynamic SQL conditions of mybatis
 
 ![动态SQL增强](https://gitee.com/davidfantasy/mybatis-plus-generator-ui/raw/master/imgs/dynamicsql.png)
 
 
-## 常见问题
+## common problem
 
-**Q:下载源码中怎么直接运行？**
+**Q:How to directly run the downloaded source code?**
 
-**不建议直接下载源码运行**，该项目是设计为直接嵌入到对应的业务项目中使用，可以自动识别项目路径等环境变量。如需采用源码运行，需要另行编译src\frontend中的静态资源（源码中不包含已编译的页面），在src\frontend文件夹中执行：
+**It is not recommended to directly download the source code and run it**，This project is designed to be directly embedded in the corresponding business project and can automatically identify environment variables such as the project path. If you want to run from source code, you need to compile the static resources in src\frontend separately (the source code does not contain compiled pages), and execute in the src\frontend folder:
 ~~~shell
 yarn install
 yarn run build
 ~~~
-然后修改src\test\java\TestApplication中数据库的相关配置，并运行。
+Then modify the relevant configuration of the database in src\test\java\TestApplication and run it.
 
-**Q:支持哪些类型的数据库？**
+**Q:What types of databases are supported?**
 
-支持几乎所有主流的数据库，具体可参考mybatis-plus-generator框架的文档。需要自行引入数据库的driver包，并在
-GeneratorConfig中指定driverClassName。
+Support almost all mainstream databases, please refer to the documentation of the mybatis-plus-generator framework for details. 
+You need to import the driver package of the database yourself, and specify the driverClassName in GeneratorConfig.
 
-**Q:怎么自定义模板参数？**
+**Q:How to customize template parameters?**
 
-在GeneratorConfig中自定义TemplateVaribleInjecter，返回需要在模板中使用的参数，例如：
+Customize TemplateVariableInjecter in GeneratorConfig to return parameters that need to be used in the template, for example:
 ```java
  GeneratorConfig config = GeneratorConfig.builder()
                 .templateVaribleInjecter(new TemplateVaribleInjecter() {
@@ -116,7 +115,7 @@ GeneratorConfig中指定driverClassName。
                 })
 ```
 
-**Q:保存的配置是存储到什么地方的？**
+**Q:Where is the saved configuration stored?**
 
-所有的用户保存的配置是按照basePackage分组保存到user.home目录的.mybatis-plus-generator-ui中的，不同项目的配置不会互相影响。
+All user-saved configurations are grouped by basePackage and saved to .mybatis-plus-generator-ui in the user.home directory, and the configurations of different projects will not affect each other.
 

@@ -36,7 +36,7 @@ import lombok.experimental.Accessors;
 @TableName("${table.name}")
 <% } %>
 <% if(swagger2){ %>
-@ApiModel(value="${entity}对象", description="${table.comment!''}")
+@ApiModel(value="${entity} object", description="${table.comment!''}")
 <% } %>
 <% if(isNotEmpty(superEntityClass)){ %>
 public class ${entity} extends ${superEntityClass}<% if(activeRecord){ %><${entity}><%}%>{
@@ -49,7 +49,7 @@ public class ${entity} implements Serializable {
 <% if(entitySerialVersionUID){ %>
     private static final long serialVersionUID = 1L;
 <% } %>
-<% /** -----------BEGIN 字段循环遍历----------- **/ %>
+<% /** -----------BEGIN field loop ----------- **/ %>
 <% for(field in table.fields){ %>
     <%
     if(field.keyFlag){
@@ -68,7 +68,7 @@ public class ${entity} implements Serializable {
     <% } %>
     <% if(field.keyFlag){ %>
     <%
-    /*主键*/
+    /*primary key*/
     %>
         <% if(field.keyIdentityFlag){ %>
     @TableId(value = "${field.annotationColumnName}", type = IdType.AUTO)
@@ -78,7 +78,7 @@ public class ${entity} implements Serializable {
     @TableId("${field.annotationColumnName}")
          <% } %>
     <%
-    /*普通字段*/
+    /*Normal fields*/
     %>
     <% }else if(isNotEmpty(field.fill)){ %>
         <% if(field.convert){ %>
@@ -90,20 +90,20 @@ public class ${entity} implements Serializable {
     @TableField("${field.annotationColumnName}")
     <% } %>
     <%
-    /*乐观锁注解*/
+    /*optimistic locking annotation*/
     %>
     <% if(versionFieldName!'' == field.name){ %>
     @Version
     <% } %>
     <%
-    /*逻辑删除注解*/
+    /* Filed logic annotation*/
     %>
     <% if(logicDeleteFieldName!'' == field.name){ %>
     @TableLogic
     <% } %>
     private ${field.propertyType} ${field.propertyName};
 <% } %>
-<% /** -----------END 字段循环遍历----------- **/ %>
+<% /** -----------END field loop ----------- **/ %>
 
 <% if(!entityLombokModel){ %>
     <% for(field in table.fields){ %>

@@ -4,12 +4,12 @@
     <div class="content">
       <div class="container">
         <div class="pull-right" style="margin-bottom:10px;">
-          <el-button type="primary" @click="addNew()">新增</el-button>
+          <el-button type="primary" @click="addNew()">Add</el-button>
         </div>
         <el-table :data="userConfig.outputFiles" border style="width: 100%">
-          <el-table-column prop="fileType" label="输出文件类型"></el-table-column>
-          <el-table-column width="500" prop="outputLocation" label="输出路径"></el-table-column>
-          <el-table-column label="文件模板">
+          <el-table-column prop="fileType" label="Output file type"></el-table-column>
+          <el-table-column width="500" prop="outputLocation" label="Output path"></el-table-column>
+          <el-table-column label="File Templates">
             <template slot-scope="scope">
               <a href="javascript:;" @click="download(scope.row.fileType, scope.row.templateName)">
                 <i class="fa fa-paperclip"></i>
@@ -17,13 +17,13 @@
               </a>
             </template>
           </el-table-column>
-          <el-table-column label="是否内置" width="80">
+          <el-table-column label="Whether built-in" width="80">
             <template slot-scope="scope">
-              <span v-if="scope.row.builtIn" style="color:red;">是</span>
-              <span v-else>否</span>
+              <span v-if="scope.row.builtIn" style="color:red;">Y</span>
+              <span v-else>N</span>
             </template>
           </el-table-column>
-          <el-table-column label="操作">
+          <el-table-column label="Action">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -46,32 +46,32 @@
       </div>
       <el-dialog :visible.sync="showEditForm" width="70%" top="5vh">
         <el-tabs v-model="activeName">
-          <el-tab-pane label="基本配置" name="base">
+          <el-tab-pane label="Base configuration" name="base">
             <el-form ref="editForm" :rules="rules" :model="form" label-width="120px">
               <el-form-item
-                label="类型标识"
+                label="Type ID"
                 prop="fileType"
-                placeholder="用于标识该类生成文件，如：服务接口,Controller等"
+                placeholder="Used to identify the generated files of this class, such as: service interface, Controller, etc."
               >
                 <el-input v-model="form.fileType" :readonly="isUpdate"></el-input>
               </el-form-item>
-              <el-form-item label="包名" prop="outputLocationPkg" placeholder="例如：org.example.entity">
+              <el-form-item label="Package name" prop="outputLocationPkg" placeholder="Example：org.example.entity">
                 <el-input v-model="form.outputLocationPkg" placeholder="org.example.entity">
                   <el-select
                     v-model="form.outputLocationPrefix"
                     style="width:110px;"
                     slot="prepend"
-                    placeholder="请选择源码目录"
+                    placeholder="Please select the source directory"
                   >
                     <el-option label="java" value="java"></el-option>
                     <el-option label="resources" value="resources"></el-option>
                   </el-select>
                 </el-input>
                 <help-tip
-                  content="生成的文件所输出的位置，选择不同的源码目录，会影响输出位置的根目录。例如选择resources，将会以resources作为包的根目录:example.mapper将保存到/resources/example/mapper目录中"
+                  content="The location where the generated file is output, selecting a different source directory will affect the root directory of the output location. For example, selecting resources will use resources as the root directory of the package: example.mapper will be saved to /resources/example/ mapper directory"
                 ></help-tip>
               </el-form-item>
-              <el-form-item label="文件模板" prop="templateName">
+              <el-form-item label="File Template" prop="templateName">
                 <a
                   href="javascript:;"
                   @click="download(form.fileType, form.templateName)"
@@ -86,16 +86,16 @@
                   :on-success="onUploadSuccess"
                   :before-upload="beforeTemplateUpload"
                 >
-                  <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
-                  <div slot="tip" class="el-upload__tip">仅支持.btl文件</div>
+                  <el-button slot="trigger" size="small" type="primary">Select file</el-button>
+                  <div slot="tip" class="el-upload__tip">Only supports .btl files</div>
                 </el-upload>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="onSubmit">保存</el-button>
+                <el-button type="primary" @click="onSubmit">Save</el-button>
               </el-form-item>
             </el-form>
           </el-tab-pane>
-          <el-tab-pane label="策略配置" name="strategy" v-if="form.builtIn">
+          <el-tab-pane label="Strategy Configuration" name="strategy" v-if="form.builtIn">
             <entity-strategy-form v-if="form.fileType=='Entity'" :user-config="userConfig"></entity-strategy-form>
             <mapper-xml-strategy-form v-if="form.fileType=='Mapper.xml'" :user-config="userConfig"></mapper-xml-strategy-form>
             <mapper-strategy-form v-if="form.fileType=='Mapper.java'" :user-config="userConfig"></mapper-strategy-form>
@@ -154,17 +154,17 @@ export default {
       },
       rules: {
         fileType: [
-          { required: true, message: "请输入文件类型", trigger: "change" },
+          { required: true, message: "Please enter the file type", trigger: "change" },
         ],
         outputLocationPkg: [
           {
             required: true,
-            message: "请输入保存文件的包名",
+            message: "Please enter the package name to save the file",
             trigger: "change",
           },
         ],
         templateName: [
-          { required: true, message: "请上传文件模板", trigger: "change" },
+          { required: true, message: "Please upload the file template", trigger: "change" },
         ],
       },
       userConfig: {},
@@ -191,7 +191,7 @@ export default {
           this.form.outputLocationPkg = this.form.outputLocation;
         }
       }
-      //mapper.xml文件默认根目录为resources，其它默认为java
+      //The default root directory of the mapper.xml file is resources, and the other defaults are java
       if (!this.form.outputLocationPrefix) {
         if (this.form.fileType === "Mapper.xml") {
           this.form.outputLocationPrefix = "resources";
@@ -225,11 +225,11 @@ export default {
       let fileType = tempArray[tempArray.length - 1];
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (fileType != "btl") {
-        this.$message.error("请选择正确的模板文件格式");
+        this.$message.error("Please select the correct template file format");
         return false;
       }
       if (!isLt2M) {
-        this.$message.error("模板文件不能超过 2MB!");
+        this.$message.error("Template file cannot exceed 2MB!");
         return false;
       }
       return true;
@@ -240,7 +240,7 @@ export default {
           this.form.outputLocation =
             this.form.outputLocationPrefix + ":" + this.form.outputLocationPkg;
           axios.post("/api/output-file-info/save", this.form).then((res) => {
-            this.$message.success("信息保存成功");
+            this.$message.success("Message saved successfully");
             this.clearForm();
             this.activeName = "base";
             this.showEditForm = false;
@@ -252,12 +252,12 @@ export default {
       });
     },
     deleteFileInfo(fileInfo) {
-      this.$confirm("确认删除?", "操作提示", {
+      this.$confirm("Confirm to delete?", "Operation", {
         type: "warning",
       }).then(() => {
         axios.post("/api/output-file-info/delete", fileInfo).then((res) => {
           this.$message({
-            message: "输出文件已删除",
+            message: "The output file has been deleted",
             type: "success",
           });
           this.getFileInfos();
@@ -278,12 +278,12 @@ export default {
     },
     onUploadSuccess(res, file, fileList) {
       if (res.code === 200) {
-        this.$message.success("模板文件上传成功");
+        this.$message.success("The template file was uploaded successfully");
         this.form.templateName = res.data.templateName;
         this.form.templatePath = res.data.templatePath;
         this.$refs.upload.clearFiles();
       } else {
-        this.$message.error("模板文件上传失败");
+        this.$message.error("Template file upload failed");
       }
     },
   },

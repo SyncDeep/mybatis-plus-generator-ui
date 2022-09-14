@@ -20,7 +20,7 @@ const setProps = (router) => {
 
 module.exports = {
   env: {
-    contextPath: contextPath, //资源引用路径前缀
+    contextPath: contextPath, //Resource reference path prefix
   },
   mode: "spa",
   srcDir: "src/",
@@ -82,7 +82,7 @@ module.exports = {
   plugins: ["@/plugins/element-ui", "@/plugins/axios", "@/plugins/components"],
   generate: {
     /*
-     ** 指定编译后文件的输出目录
+     ** Specifies the output directory for compiled files
      */
     dir: path.resolve("../main/resources/generator-ui/"),
   },
@@ -123,7 +123,7 @@ module.exports = {
       }
     },
   },
-  //开发服务器代理设置
+  //Development server proxy settings
   proxy: {
     "/api": {
       target: "http://localhost:8068/",

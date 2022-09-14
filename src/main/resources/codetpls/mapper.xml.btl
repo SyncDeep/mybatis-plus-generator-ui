@@ -3,25 +3,25 @@
 <mapper namespace="${package.Mapper}.${table.mapperName}">
 
 <% if(enableCache){ %>
-    <!-- 开启二级缓存 -->
+    <!-- Enable L2 cache -->
     <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
 
 <% } %>
 <% if(baseResultMap){ %>
-    <!-- 通用查询映射结果 -->
+    <!-- Generic query mapping results -->
     <resultMap id="BaseResultMap" type="${package.Entity}.${entity}">
 <% for(field in table.fields){ %>
-   <% /** 生成主键排在第一位 **/ %>
+   <% /** Generate primary key first **/ %>
    <% if(field.keyFlag){ %>
         <id column="${field.name}" property="${field.propertyName}" />
    <% } %>
 <% } %>
 <% for(field in table.commonFields){ %>
-    <% /** 生成公共字段 **/ %>
+    <% /** Generate public fields **/ %>
         <result column="${field.name}" property="${field.propertyName}" />
 <% } %>
 <% for(field in table.fields){ %>
-   <% /** 生成普通字段 **/ %>
+   <% /** Generate normal fields **/ %>
    <% if(!field.keyFlag){ %>
         <result column="${field.name}" property="${field.propertyName}" />
    <% } %>
@@ -29,7 +29,7 @@
     </resultMap>
 <% } %>
 <% if(baseColumnList){ %>
-    <!-- 通用查询结果列 -->
+    <!-- General query result column  -->
     <sql id="Base_Column_List">
 <% for(field in table.commonFields){ %>
         ${field.columnName},

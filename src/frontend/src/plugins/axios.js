@@ -18,19 +18,19 @@ export default ({
     if (config.method === 'get') {
       config.url = encodeURI(config.url);
     }
-    //添加权限token
+    //Add permission token
     if (store.state.authToken) {
       config.headers["jwt-token"] = store.state.authToken;
     }
     return config;
   }, function (error) {
-    Message.error("请求不可用");
+    Message.error("request unavailable");
     return Promise.reject(error);
   });
 
   axios.interceptors.response.use(function (res) {
     if (res.headers["jwt-token"]) {
-      //刷新即将过期的token
+      //Refresh tokens that are about to expire
       store.commit('refreshToken', res.headers["jwt-token"]);
     }
     var result = res.data;
@@ -41,10 +41,10 @@ export default ({
       case (200):
         return result.data;
       case (401):
-        Message.error("您还没有登录或登录信息已过期");
+        Message.error("You are not logged in or your login information has expired");
         return Promise.reject(result.code);
       case (403):
-        Message.error("您没有权限访问该功能");
+        Message.error("You do not have permission to access this feature");
         return Promise.reject(result.code);
       default:
         Vue.prototype.$loading().close();
@@ -52,7 +52,7 @@ export default ({
         return Promise.reject(result.code);
     }
   }, function (error) {
-    Message.error("无法访问服务器，请检查网络");
+    Message.error("Unable to reach the server, please check the network");
     return Promise.reject(error);
   });
 }

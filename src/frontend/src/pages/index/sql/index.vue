@@ -3,25 +3,25 @@
     <div class="content-header"></div>
     <div class="content">
       <div class="container">
-        <div style="margin-buttom:10px;">请输入待转换的SQL语句：</div>
+        <div style="margin-buttom:10px;"> Please enter the SQL statement to be converted：</div>
         <el-alert title="Tip：" type="info" style="margin:10px;" show-icon :closable="false">
-          支持在SQL中嵌入Mybatis的动态参数，系统会自动识别参数，并生成对应的条件控制语句
+          Supports dynamic parameters embedded in Mybatis in SQL, the system will automatically identify the parameters and generate corresponding conditional control statements
           <a
             href="javascript:;"
             @click="showDynamicParamsDemo = true"
-          >查看示例</a>
+          >View Example</a>
         </el-alert>
         <codemirror v-model="sqlCode" :options="cmOptions" />
-        <el-dialog title="SQL转代码的输出配置" :visible.sync="showDtoConfig" width="60%" top="5vh">
+        <el-dialog title="SQL to code output configuration" :visible.sync="showDtoConfig" width="60%" top="5vh">
           <dto-strategy-form :sql="encodedSQL" @done="showDtoConfig = false"></dto-strategy-form>
         </el-dialog>
         <div style="margin-top:10px">
-          <el-button type="primary" @click="genDtoFile">生成Mapper方法&DTO</el-button>
+          <el-button type="primary" @click="genDtoFile">Generate Mapper method & DTO</el-button>
         </div>
       </div>
       <el-dialog
         :modal="false"
-        title="动态SQL增强示例"
+        title="Dynamic SQL Enhancement Example"
         :visible.sync="showDynamicParamsDemo"
         width="80%"
         top="5vh"
@@ -68,7 +68,7 @@ export default {
   methods: {
     genDtoFile() {
       if (!this.sqlCode) {
-        this.$message.error("请先输入SQL语句");
+        this.$message.error("Please enter the SQL statement first");
         return;
       }
       this.encodedSQL = Base64.encodeURI(this.sqlCode);

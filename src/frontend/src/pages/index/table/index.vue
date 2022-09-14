@@ -7,18 +7,18 @@
           <el-input
             clearable
             style="width: 300px; margin-right: 20px"
-            placeholder="请输入表名进行查询"
+            placeholder="Please enter the table name to query"
             prefix-icon="el-icon-search"
             v-model="searchKey"
           ></el-input>
           <el-button type="primary" @click="openGenSetting">代码生成</el-button>
           <span style="color: #e6a23c; font-size: 14px" v-if="isNewProject"
-            >当前项目还没保存自定义配置，将使用默认配置。您也可以<a
+            >The current project has not saved the custom configuration, the default configuration will be used. You can also <a
               href="#"
               @click="openImportProjectView"
-              >导入</a
-            >其它项目的配置，或者自定义
-            <router-link to="/config">配置</router-link>
+              >import</a
+            >Configuration of other projects, or custom
+            <router-link to="/config">Configure</router-link>
           </span>
         </div>
         <el-table
@@ -32,33 +32,33 @@
           <el-table-column
             type="index"
             width="50"
-            label="序号"
+            label="Serial numbe"
           ></el-table-column>
-          <el-table-column sortable prop="name" label="table名称">
+          <el-table-column sortable prop="name" label="table name">
             <template slot-scope="scope">{{ scope.row.name }}</template>
           </el-table-column>
-          <el-table-column prop="comment" label="table注释"></el-table-column>
+          <el-table-column prop="comment" label="table comment"></el-table-column>
         </el-table>
       </div>
     </div>
     <el-dialog
       :visible.sync="showGenSettingDialog"
-      title="输出配置"
+      title="Output Configuration"
       width="70%"
       top="5vh"
     >
       <el-form label-width="220px">
-        <el-form-item label="代码作者">
+        <el-form-item label="Code Author">
           <el-input v-model="genSetting.author" style="width: 260px"></el-input>
         </el-form-item>
-        <el-form-item label="功能模块名">
+        <el-form-item label="Module name">
           <el-input
             v-model="genSetting.moduleName"
-            placeholder="模块名将加入到输出包名之后，用于划分不同的模块"
+            placeholder="The module name will be added to the output package name to separate different modules "
             style="width: 400px"
           ></el-input>
         </el-form-item>
-        <el-form-item label="本次需生成的文件">
+        <el-form-item label="The file to be generated this time">
           <el-checkbox-group v-model="genSetting.choosedOutputFiles">
             <el-checkbox
               v-for="file in userConfig.outputFiles"
@@ -68,44 +68,44 @@
             >
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="需生成的Controller方法" v-if="isControllerChecked">
+        <el-form-item label="Controller method to be generated" v-if="isControllerChecked">
           <el-alert
-            title="注意：如果更换了Controller的模板，以下选项可能不会生效，需自行在模板中实现"
+            title="Note: If the template of the Controller is changed, the following options may not take effect and need to be implemented in the template by yourself"
             type="warning"
           ></el-alert>
           <el-checkbox-group v-model="genSetting.choosedControllerMethods">
-            <el-checkbox label="list" key="list">列表查询</el-checkbox>
-            <el-checkbox label="getById" key="getById">按ID查询</el-checkbox>
-            <el-checkbox label="create" key="create">新增</el-checkbox>
-            <el-checkbox label="update" key="update">修改</el-checkbox>
-            <el-checkbox label="delete" key="delete">删除</el-checkbox>
+            <el-checkbox label="list" key="list">List query</el-checkbox>
+            <el-checkbox label="getById" key="getById">Query by ID</el-checkbox>
+            <el-checkbox label="create" key="create">Add</el-checkbox>
+            <el-checkbox label="update" key="update">Update</el-checkbox>
+            <el-checkbox label="delete" key="delete">Delete</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="存在同名文件时是否覆盖">
+        <el-form-item label="Whether to overwrite if there is a file with the same name">
           <el-switch v-model="genSetting.override"></el-switch>
         </el-form-item>
-        <el-form-item label="目标项目根目录">
+        <el-form-item label="Target item root directory">
           <el-input
             v-model="genSetting.rootPath"
             style="width: 400px"
           ></el-input>
           <help-tip
-            content="最终生成的代码位置等于：目标项目根目录 + 具体某个类别的源码设置的包目录"
+            content="The final generated code location: the root directory of the target project + the package directory set by the source code of a specific category"
           ></help-tip>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="genCode()">开始生成</el-button>
+          <el-button type="primary" @click="genCode()">Start generation</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
     <el-dialog
       :visible.sync="showSavedProjectsDialog"
-      title="项目配置导入"
+      title="Project Configuration Import"
       width="50%"
       top="5vh"
     >
       <el-table :data="savedProjects" height="300px">
-        <el-table-column label="项目包路径">
+        <el-table-column label="Project Package Path">
           <template slot-scope="scope">
             {{ scope.row }}
           </template>
@@ -116,7 +116,7 @@
               type="info"
               size="mini"
               @click="importProjectConfig(scope.row)"
-              >导入</el-button
+              >Import</el-button
             >
           </template>
         </el-table-column>
@@ -203,15 +203,15 @@ export default {
     },
     openGenSetting() {
       if (this.choosedTables.length === 0) {
-        this.$message.warning("请至少选择一张数据表");
+        this.$message.warning("Please select at least one data table ");
         return;
       }
-      //获取上一次的生成配置
+      //Get the last build configuration
       try {
         let lastSetting = sessionStorage.getItem("gen-setting");
         if (lastSetting) {
           _.assign(this.genSetting, JSON.parse(lastSetting));
-          //清空部分一次性配置
+          //Clear some one-time configuration
           this.genSetting.moduleName = "";
           this.genSetting.override = false;
         }
@@ -227,10 +227,10 @@ export default {
     },
     genCode() {
       this.$confirm(
-        "确认生成所选择的'" +
+        "Confirm to generate selected'" +
           this.choosedTables.length +
-          "'张数据表的业务代码吗?",
-        "操作提示",
+          " business code for a data sheet?",
+        "Operation",
         {
           type: "warning",
         }
@@ -245,7 +245,7 @@ export default {
           .post("/api/mbp-generator/gen-code", params)
           .then((res) => {
             this.$message({
-              message: "业务代码已生成",
+              message: "Business code has been generated",
               type: "success",
             });
             aLoading.close();
@@ -265,14 +265,14 @@ export default {
       });
     },
     importProjectConfig(sourceProjectPkg) {
-      this.$confirm("确定导入" + sourceProjectPkg + "的配置吗？")
+      this.$confirm("Are you sure about importing " + sourceProjectPkg + "Configuration？")
         .then(() => {
           axios
             .post(
               "/api/output-file-info/import-project-config/" + sourceProjectPkg
             )
             .then(() => {
-              this.$message.success("配置已导入");
+              this.$message.success("Configuration imported");
               this.showSavedProjectsDialog = false;
               setTimeout(() => {
                 window.location.reload();

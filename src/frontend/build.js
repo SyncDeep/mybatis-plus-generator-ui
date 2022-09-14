@@ -9,25 +9,25 @@ let staticPath = path.resolve('./src/static')
 let necessaryFiles = ["_nuxt", "index.html"];
 
 fs.rmdir(distPath, function (error) {
-    console.log(colors.green('已清理static目录'));
-    console.log('开始build前端资源');
+    console.log(colors.green('Cleaned static directory'));
+    console.log('Start building front-end resources');
     if (!fs.existsSync(distPath)) {
-        console.log(colors.yellow("目标文件夹不存在，已自动创建：" + distPath));
+        console.log(colors.yellow("The destination folder does not exist, it was created automatically：" + distPath));
         fs.mkdirSync(distPath);
     }
     exec("nuxt build", function (err, sto) {
         if (err != null) {
-            console.error(colors.red('前端资源编译错误'));
+            console.error(colors.red('Front-end resource compilation error'));
             console.error(colors.red(err));
         } else {
-            console.log(colors.green('前端资源编译成功'));
+            console.log(colors.green('Front-end resources compiled successfully'));
             let staticFiles = fs.readdirSync(staticPath);
             staticFiles.forEach(function (filename) {
                 necessaryFiles.push(filename);
             });
             console.log(colors.yellow(necessaryFiles));
             let distFiles = fs.readdirSync(distPath);
-            //删除自动生成的不必要的静态文件
+            //Remove automatically generated unnecessary static files
             distFiles.forEach(function (filename) {
                 let flag = _.findIndex(necessaryFiles, function (f) {
                     return f === filename;
@@ -41,7 +41,7 @@ fs.rmdir(distPath, function (error) {
                     }
                 }
             });
-            console.log(colors.green('已删除不必要的文件'));
+            console.log(colors.green('Unnecessary files have been removed'));
         }
     });
 })
