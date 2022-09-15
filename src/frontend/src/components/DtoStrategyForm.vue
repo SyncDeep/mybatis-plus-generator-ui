@@ -1,9 +1,9 @@
 <template>
   <el-form ref="editForm" :rules="rules" :model="form" label-width="230px">
-    <el-form-item label="Code Author">
+    <el-form-item label="작성자">
       <el-input v-model="form.author" style="width:95%;"></el-input>
     </el-form-item>
-    <el-form-item label="Enable Lombok annotations">
+    <el-form-item label="Lombok annotations">
       <el-switch v-model="form.enableLombok"></el-switch>
     </el-form-item>
     <el-form-item prop="mapperPackage" label="Mapper(Xml) package name">
@@ -12,66 +12,66 @@
         style="width:95%;"
         :fetch-suggestions="queryMapperPackage"
         @select="handleMapperPackageSelect"
-        placeholder="Example：com.example.OrderMapper"
+        placeholder="예제：com.example.OrderMapper"
       >
         <el-select
           v-model="form.mapperLocationPrefix"
           style="width:110px;"
           slot="prepend"
-          placeholder="Please select the source directory"
+          placeholder="소스 경로 선택"
         >
           <el-option label="java" value="java"></el-option>
           <el-option label="resources" value="resources"></el-option>
         </el-select>
       </el-autocomplete>
       <help-tip
-        content="The package name of Mapper.xml where the generated Mapper method is located, Example：com.example.OrderMapper，selecting java or resources will search for resources in the corresponding source code root directory"
+        content="Mapper.xml의 패키지명으로 생성될 Mapper 파일의 위치. 예제：com.example.OrderMapper，java or resources  + /com/example/OrderMapper.xml"
       ></help-tip>
     </el-form-item>
     <el-form-item prop="mapperMethod" label="Mapper(Xml) SQL Node ID">
       <el-input
         style="width:95%;"
         v-model="form.mapperMethod"
-        placeholder="Example：selectOrders"
+        placeholder="예제：selectOrders"
         @blur="handleMapperMethodInput"
       ></el-input>
     </el-form-item>
-    <el-form-item label="DTO object that encapsulates query results" prop="fullPackage">
+    <el-form-item label="DTO 객체" prop="fullPackage">
       <el-input
         :clearable="true"
         style="width:95%;"
         v-model="form.fullPackage"
-        placeholder="Example：com.example.dto.ExampleResultDto"
+        placeholder="예제：com.example.dto.ExampleResultDto"
       ></el-input>
-      <help-tip content="The DTO class used to map the results of the query. If it is empty, Map will be used to encapsulate the query results by default. The complete package and class name must be included. If the class does not exist, it will be automatically generated"></help-tip>
+      <help-tip content="DTO가 지정되지 않은 경우 Map이 사용됨.  존재하지 않는 경우 자동 생성(package명과 class명 포함)"></help-tip>
     </el-form-item>
-    <el-form-item label="Method for synchronously generating Mapper (java)">
+    <el-form-item label="고급 설정(java)">
       <el-switch v-model="form.enableCreateDaoMethod"></el-switch>
     </el-form-item>
-    <el-form-item label="Whether to enable paging query" v-if="form.enableCreateDaoMethod">
+    <el-form-item label="페이징 쿼리 생성" v-if="form.enableCreateDaoMethod">
       <el-switch v-model="form.enablePageQuery"></el-switch>
-      <help-tip content="After the paging query is enabled, the return value of the Mapper method will be wrapped as a Page type, and the corresponding paging parameters will be added"></help-tip>
+      <help-tip content="Mapper는 Page 객체를 리턴하고 페이징 관련 파라미터 자동 추가"></help-tip>
     </el-form-item>
-    <el-form-item v-if="form.enableCreateDaoMethod" label="Mapper(java) method parameter type">
+    <el-form-item v-if="form.enableCreateDaoMethod" label="Mapper 파라미터 유형">
       <el-radio-group v-model="form.daoMethodParamType">
-        <el-radio label="map">Map（SQL dynamic parameters as the key of Map）</el-radio>
-        <el-radio label="bean">Java Bean（SQL dynamic parameters as Bean's Property）</el-radio>
-        <el-radio label="single">Multiple parameters（SQL dynamic parameters each as a separate method parameter）</el-radio>
+        <el-radio label="map">Map</el-radio>
+        <el-radio label="bean">Java Bean</el-radio>
+        <el-radio label="single">Method Parameter</el-radio>
       </el-radio-group>
     </el-form-item>
     <el-form-item
       v-if="form.enableCreateDaoMethod && form.daoMethodParamType == 'bean'"
-      label="Mapper(java) method parameter DTO"
+      label="메소드 파라미터 DTO"
     >
       <el-input
         style="width:80%;"
         v-model="form.daoMethodParamDto"
-        placeholder="Example：com.example.dto.XXXMethodParamsDto"
+        placeholder="예제：com.example.dto.XXXMethodParamsDto"
       ></el-input>
-      <help-tip content="The reference position of the method parameter Bean of Mapper, if it does not exist, it will be automatically generated according to the SQL dynamic parameters."></help-tip>
+      <help-tip content="파라미터 클래스. 존재하지 않는 경우 자동 생성"></help-tip>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">Generate code</el-button>
+      <el-button type="primary" @click="onSubmit">생성</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -106,14 +106,14 @@ export default {
         mapperPackage: [
           {
             required: true,
-            message: "The package name of the Mapper file must be filled",
+            message: "Mapper 페키지 이름을 입력하세요",
             trigger: "change",
           },
         ],
         mapperMethod: [
           {
             required: true,
-            message: "Mapper method name must be filled",
+            message: "Mapper 메소드 이름을 입력하세요",
             trigger: "change",
           },
         ],
@@ -171,7 +171,7 @@ export default {
               config: this.form,
             })
             .then((res) => {
-              this.$message.success("The code has been successfully generated");
+              this.$message.success("코드 생성을 완료 했습니다");
               this.$emit("done");
             });
         } else {

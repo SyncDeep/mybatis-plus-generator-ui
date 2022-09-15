@@ -4,12 +4,12 @@
     <div class="content">
       <div class="container">
         <div class="pull-right" style="margin-bottom:10px;">
-          <el-button type="primary" @click="addNew()">Add</el-button>
+          <el-button type="primary" @click="addNew()">추가</el-button>
         </div>
         <el-table :data="userConfig.outputFiles" border style="width: 100%">
-          <el-table-column prop="fileType" label="Output file type"></el-table-column>
-          <el-table-column width="500" prop="outputLocation" label="Output path"></el-table-column>
-          <el-table-column label="File Templates">
+          <el-table-column prop="fileType" label="파일 유형"></el-table-column>
+          <el-table-column width="500" prop="outputLocation" label="파일 경로"></el-table-column>
+          <el-table-column label="템플릿">
             <template slot-scope="scope">
               <a href="javascript:;" @click="download(scope.row.fileType, scope.row.templateName)">
                 <i class="fa fa-paperclip"></i>
@@ -17,13 +17,13 @@
               </a>
             </template>
           </el-table-column>
-          <el-table-column label="Whether built-in" width="80">
+          <el-table-column label="기본 템플릿" width="100">
             <template slot-scope="scope">
               <span v-if="scope.row.builtIn" style="color:red;">Y</span>
               <span v-else>N</span>
             </template>
           </el-table-column>
-          <el-table-column label="Action">
+          <el-table-column label="작업">
             <template slot-scope="scope">
               <el-button
                 size="mini"
@@ -46,32 +46,32 @@
       </div>
       <el-dialog :visible.sync="showEditForm" width="70%" top="5vh">
         <el-tabs v-model="activeName">
-          <el-tab-pane label="Base configuration" name="base">
+          <el-tab-pane label="기본 설정" name="base">
             <el-form ref="editForm" :rules="rules" :model="form" label-width="120px">
               <el-form-item
-                label="Type ID"
+                label="유형"
                 prop="fileType"
-                placeholder="Used to identify the generated files of this class, such as: service interface, Controller, etc."
+                placeholder="생성될 유형( Service, Controller, Dao etc)"
               >
                 <el-input v-model="form.fileType" :readonly="isUpdate"></el-input>
               </el-form-item>
-              <el-form-item label="Package name" prop="outputLocationPkg" placeholder="Example：org.example.entity">
+              <el-form-item label="패키지명" prop="outputLocationPkg" placeholder="예제：org.example.entity">
                 <el-input v-model="form.outputLocationPkg" placeholder="org.example.entity">
                   <el-select
                     v-model="form.outputLocationPrefix"
                     style="width:110px;"
                     slot="prepend"
-                    placeholder="Please select the source directory"
+                    placeholder="생성 폴더 선택"
                   >
                     <el-option label="java" value="java"></el-option>
                     <el-option label="resources" value="resources"></el-option>
                   </el-select>
                 </el-input>
                 <help-tip
-                  content="The location where the generated file is output, selecting a different source directory will affect the root directory of the output location. For example, selecting resources will use resources as the root directory of the package: example.mapper will be saved to /resources/example/ mapper directory"
+                  content="생성된 파일이 저장될 위치 지정. 패지지가 example.mapper인 경우 생성된 파일은 /resources/example/mapper 폴더 저장"
                 ></help-tip>
               </el-form-item>
-              <el-form-item label="File Template" prop="templateName">
+              <el-form-item label="파일 템플릿" prop="templateName">
                 <a
                   href="javascript:;"
                   @click="download(form.fileType, form.templateName)"
@@ -86,16 +86,16 @@
                   :on-success="onUploadSuccess"
                   :before-upload="beforeTemplateUpload"
                 >
-                  <el-button slot="trigger" size="small" type="primary">Select file</el-button>
-                  <div slot="tip" class="el-upload__tip">Only supports .btl files</div>
+                  <el-button slot="trigger" size="small" type="primary">파일 선택</el-button>
+                  <div slot="tip" class="el-upload__tip">.btl 파일</div>
                 </el-upload>
               </el-form-item>
               <el-form-item>
-                <el-button type="primary" @click="onSubmit">Save</el-button>
+                <el-button type="primary" @click="onSubmit">저장</el-button>
               </el-form-item>
             </el-form>
           </el-tab-pane>
-          <el-tab-pane label="Strategy Configuration" name="strategy" v-if="form.builtIn">
+          <el-tab-pane label="생성 규칙 설정" name="strategy" v-if="form.builtIn">
             <entity-strategy-form v-if="form.fileType=='Entity'" :user-config="userConfig"></entity-strategy-form>
             <mapper-xml-strategy-form v-if="form.fileType=='Mapper.xml'" :user-config="userConfig"></mapper-xml-strategy-form>
             <mapper-strategy-form v-if="form.fileType=='Mapper.java'" :user-config="userConfig"></mapper-strategy-form>
@@ -154,17 +154,17 @@ export default {
       },
       rules: {
         fileType: [
-          { required: true, message: "Please enter the file type", trigger: "change" },
+          { required: true, message: "파일 유형을 입력하세요", trigger: "change" },
         ],
         outputLocationPkg: [
           {
             required: true,
-            message: "Please enter the package name to save the file",
+            message: "페이지명을 입력하세요",
             trigger: "change",
           },
         ],
         templateName: [
-          { required: true, message: "Please upload the file template", trigger: "change" },
+          { required: true, message: "템플릿을 업로드하세요", trigger: "change" },
         ],
       },
       userConfig: {},
@@ -225,11 +225,11 @@ export default {
       let fileType = tempArray[tempArray.length - 1];
       const isLt2M = file.size / 1024 / 1024 < 2;
       if (fileType != "btl") {
-        this.$message.error("Please select the correct template file format");
+        this.$message.error("Beetl 템플릿을 선택하세요(.btl)");
         return false;
       }
       if (!isLt2M) {
-        this.$message.error("Template file cannot exceed 2MB!");
+        this.$message.error("템플릿 파일 최대 용량은 2MB입니다.");
         return false;
       }
       return true;
@@ -240,7 +240,7 @@ export default {
           this.form.outputLocation =
             this.form.outputLocationPrefix + ":" + this.form.outputLocationPkg;
           axios.post("/api/output-file-info/save", this.form).then((res) => {
-            this.$message.success("Message saved successfully");
+            this.$message.success("저장했습니다");
             this.clearForm();
             this.activeName = "base";
             this.showEditForm = false;
@@ -252,12 +252,12 @@ export default {
       });
     },
     deleteFileInfo(fileInfo) {
-      this.$confirm("Confirm to delete?", "Operation", {
+      this.$confirm("삭제 하시겠습니까?", "작업 결과", {
         type: "warning",
       }).then(() => {
         axios.post("/api/output-file-info/delete", fileInfo).then((res) => {
           this.$message({
-            message: "The output file has been deleted",
+            message: "파일을 삭제 했습니다",
             type: "success",
           });
           this.getFileInfos();
@@ -278,12 +278,12 @@ export default {
     },
     onUploadSuccess(res, file, fileList) {
       if (res.code === 200) {
-        this.$message.success("The template file was uploaded successfully");
+        this.$message.success("템플릿을 업로드 했습니다");
         this.form.templateName = res.data.templateName;
         this.form.templatePath = res.data.templatePath;
         this.$refs.upload.clearFiles();
       } else {
-        this.$message.error("Template file upload failed");
+        this.$message.error("템플릿 업로드 실패 했습니다");
       }
     },
   },

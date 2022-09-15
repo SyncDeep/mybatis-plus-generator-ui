@@ -1,21 +1,15 @@
 <template>
   <div>
-    <div>Dynamic SQL enhancement refers to converting the where condition containing mybatis dynamic parameters (#{...}) into the dynamic SQL condition of mybatis, which is generally used for querying by user input conditions, Example：</div>
+    <div>동적 파라미터(#{...}) 를 분석해서 MyBatis 동적 SQL 생성. SQL 예제</div>
     <codemirror v-model="sqlCode" :options="sqlOptions" />
     <div style="margin-buttom:10px,margin-top:10px">
-      The above SQL will be converted to the following dynamic SQL, note that
-      <span style="color:red">dynamic parameters need to be enclosed in quotes</span>
+      <span style="color:red">동적 파라미터는 quotation으로 구분</span>. 생성된 Mapper xml 예제
     </div>
     <codemirror v-model="xmlCode" :options="xmlOptions" />
   </div>
 </template>
 <script>
-import { codemirror } from "vue-codemirror";
-import "codemirror/mode/xml/xml.js";
 export default {
-  components: {
-    codemirror,
-  },
   data() {
     return {
       sqlOptions: {

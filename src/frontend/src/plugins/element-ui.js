@@ -47,6 +47,11 @@ import {
 	Tag
 } from 'element-ui';
 
+import lang from 'element-ui/lib/locale/lang/ko'
+import locale from 'element-ui/lib/locale'
+
+locale.use(lang)
+
 Vue.use(Collapse);
 Vue.use(CollapseItem);
 Vue.use(Dialog);

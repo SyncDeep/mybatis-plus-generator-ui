@@ -84,7 +84,7 @@ public class OutputFileInfoController {
     }
 
     /**
-     * 查看当前项目是否存在配置文件
+     * Check if there is a configuration file in the current project
      *
      * @return
      */
@@ -94,7 +94,7 @@ public class OutputFileInfoController {
     }
 
     /**
-     * 获取本机所有已保存配置的项目列表
+     *  Get a list of all saved configuration items on the machine
      *
      * @return
      */
@@ -104,7 +104,7 @@ public class OutputFileInfoController {
     }
 
     /**
-     * 为当前项目导入其它项目的配置文件
+     * Import configuration files of other projects for the current project
      *
      * @return
      */

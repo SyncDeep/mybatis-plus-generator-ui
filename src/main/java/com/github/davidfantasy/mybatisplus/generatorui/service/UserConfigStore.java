@@ -67,14 +67,14 @@ public class UserConfigStore {
         try {
             return JsonUtil.json2obj(userConfigStr, UserConfig.class);
         } catch (Exception e) {
-            log.error("读取用户配置文件发生错误：", e);
+            log.error("Error reading user profile：", e);
             return null;
         }
     }
 
     public void saveUserConfig(UserConfig userConfig) throws IOException {
         if (userConfig == null) {
-            throw new ServiceException("不能写入空的用户配置");
+            throw new ServiceException("Cannot write empty user configuration");
         }
         String configStr = JsonUtil.obj2json(userConfig);
         File userConfigFile = new File(this.userConfigPath);
@@ -91,12 +91,12 @@ public class UserConfigStore {
         String fileSuffix = fileName.substring(file.getOriginalFilename().lastIndexOf(".") + 1);
         String saveFileName = fileName.substring(0, fileName.lastIndexOf(fileSuffix)) + DateUtil.format(new Date(), "yyyyMMddHHmmss");
         String savePath = PathUtil.joinPath(getTemplateStoreDir(), saveFileName);
-        log.info("模板上传路径为：{}", savePath);
+        log.info("The template upload path is：{}", savePath);
         File saveFile = new File(savePath);
         try {
             FileUtil.writeFromStream(file.getInputStream(), saveFile);
         } catch (IOException e) {
-            throw new ServiceException("上传模板文件失败", e);
+            throw new ServiceException("Failed to upload template file", e);
         }
         return RESOURCE_PREFIX_FILE + savePath;
     }
@@ -124,7 +124,7 @@ public class UserConfigStore {
             }
         }
         if (!flag) {
-            throw new ServiceException("未找到待导入的源项目配置");
+            throw new ServiceException("No source project configuration to import was found");
         }
         String sourceProjectConfigPath = PathUtil.joinPath(System.getProperty("user.home"), CONFIG_HOME, sourcePkg);
         String targetProjectConfigPath = this.storeDir;

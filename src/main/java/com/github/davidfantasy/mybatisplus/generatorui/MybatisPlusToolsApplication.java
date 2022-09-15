@@ -18,8 +18,8 @@ import java.util.Map;
 
 
 /**
- * 不使用@SpringBootApplication和@EnableAutoConfiguration
- * 注解，避免启动时被宿主系统的自动配置所干扰，直接注入需要的配置类
+ * Do not use @SpringBootApplication and @EnableAutoConfiguration
+ * Annotation to avoid being interfered by the automatic configuration of the host system at startup, directly inject the required configuration class
  */
 @SpringBootConfiguration
 @Import({

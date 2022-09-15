@@ -23,14 +23,14 @@ public class DynamicParamSqlEnhancer {
     }
 
     /**
-     * 解析SQL中所有的where动态条件
+     * SQL의 Dynamic Condition 구문 분석
      *
      * @param sql
      * @return
      */
     public List<ConditionExpr> parseSqlDynamicConditions(String sql) {
         if (Strings.isNullOrEmpty(sql)) {
-            throw new ServiceException("sql不能为空");
+            throw new ServiceException("SQL문을 입력하세요.");
         }
         try {
             CCJSqlParser ccjSqlParser = new CCJSqlParser(sql);
@@ -41,16 +41,16 @@ public class DynamicParamSqlEnhancer {
                 select.getSelectBody().accept(parser);
                 return parser.getParsedConditions();
             } else {
-                throw new ServiceException("只能处理SQL查询语句");
+                throw new ServiceException("Select문만 처리할 수 있습니다");
             }
         } catch (Exception e) {
-            log.error("解析SQL条件发生错误", e);
-            throw new ServiceException("解析SQL条件发生错误,请检查SQL语法");
+            log.error("SQL Condition 구문 분석중 오류", e);
+            throw new ServiceException("SQL Condition 구문 분석중 오류");
         }
     }
 
     /**
-     * 将SQL中标记的动态条件替换为Mybatis动态SQL
+     * SQL에 표시된 Dynamic Condition을 Mybatis Dynamic SQL로 변환
      */
     public String enhanceDynamicConditions(String sql) {
         List<ConditionExpr> conditions = parseSqlDynamicConditions(sql);
@@ -62,7 +62,7 @@ public class DynamicParamSqlEnhancer {
     }
 
     /**
-     * 去掉SQL中不符合语法的动态条件
+     * SQL in query 처리
      */
     public String clearIllegalStatements(String sql) {
         List<ConditionExpr> conditions = parseSqlDynamicConditions(sql);

@@ -9,7 +9,7 @@
             class="brand-image img-circle elevation-3"
             style="opacity: .8"
           />
-          <span class="brand-text font-weight-light">Mybatis-Plus Code Generator</span>
+          <span class="brand-text font-weight-light">Mybatis-Plus 코드 생성기</span>
         </a>
         <div class="collapse navbar-collapse order-3" id="navbarCollapse">
           <!-- Left navbar links -->
@@ -22,24 +22,18 @@
                 aria-haspopup="true"
                 aria-expanded="false"
                 class="nav-link dropdown-toggle"
-              >Table Code Generation</a>
+              >기본 코드 생성</a>
               <ul aria-labelledby="tableMenuDropdown" class="dropdown-menu border-0 shadow">
                 <li>
-                  <router-link to="/table" class="dropdown-item">Table query</router-link>
+                  <router-link to="/table" class="dropdown-item">테이블</router-link>
                 </li>
                 <li>
-                  <router-link to="/config" class="dropdown-item">Output config</router-link>
+                  <router-link to="/config" class="dropdown-item">설정</router-link>
                 </li>
               </ul>
             </li>
             <li class="nav-item">
-              <router-link to="/sql" class="nav-link">SQL code generation</router-link>
-            </li>
-            <li class="nav-item">
-              <a href="https://github.com/davidfantasy/mybatis-plus-generator-ui" class="nav-link">
-                <i class="fa fa-github"></i>
-                GitHub
-              </a>
+              <router-link to="/sql" class="nav-link">SQL 코드 생성</router-link>
             </li>
           </ul>
         </div>

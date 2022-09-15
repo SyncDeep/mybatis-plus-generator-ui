@@ -1,15 +1,15 @@
 <template>
   <el-form ref="editForm" :model="form" label-width="180px" size="mini">
-    <el-form-item label="Controller's superclass name">
+    <el-form-item label="상위 클래스">
       <el-input v-model="form.superControllerClass"></el-input>
     </el-form-item>
-    <el-form-item label="Enable REST interface annotation" placeholder>
+    <el-form-item label="REST annotation" placeholder>
       <el-switch v-model="form.restControllerStyle"></el-switch>
-      <help-tip content="Replace @Controller with @RestController annotation"></help-tip>
+      <help-tip content="@Controller를 @RestController로 변경"></help-tip>
     </el-form-item>
-    <el-form-item label="Mapping Url Format Conversion" placeholder>
+    <el-form-item label="Url Format 변환" placeholder>
       <el-switch v-model="form.controllerMappingHyphenStyle"></el-switch>
-      <help-tip content="CamelCase to hyphen, sample：/managerUserActionHistory -> /manager-user-action-history "></help-tip>
+      <help-tip content="CamelCase -> hyphen. 예제：/managerUserActionHistory -> /manager-user-action-history"></help-tip>
     </el-form-item>
     <el-form-item>
       <el-button type="primary" @click="onSubmit">Save</el-button>
@@ -48,7 +48,7 @@ export default {
       axios
         .post("/api/output-file-info/save-controller-strategy", this.form)
         .then(res => {
-          this.$message.success("Message saved successfully");
+          this.$message.success("저장했습니다");
         });
     }
   }

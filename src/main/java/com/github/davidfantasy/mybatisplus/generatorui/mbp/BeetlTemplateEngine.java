@@ -29,7 +29,7 @@ public class BeetlTemplateEngine extends AbstractTemplateEngine {
     public BeetlTemplateEngine(String templateStoreDir) {
         this.templateStoreDir = templateStoreDir;
         try {
-            logger.info("模板根目录为：" + templateStoreDir);
+            logger.info("Template root：" + templateStoreDir);
             ClasspathResourceLoader classpathResourceLoader = new ClasspathResourceLoader(this.getClass().getClassLoader());
             FileResourceLoader fileResourceLoader = new FileResourceLoader(templateStoreDir);
             CompositeResourceLoader loader = new CompositeResourceLoader();
@@ -53,7 +53,7 @@ public class BeetlTemplateEngine extends AbstractTemplateEngine {
             template.binding(objectMap);
             template.renderTo(fileOutputStream);
         }
-        logger.info("已生成文件:" + outputFile);
+        logger.info("Generated file:" + outputFile);
     }
 
     @Override

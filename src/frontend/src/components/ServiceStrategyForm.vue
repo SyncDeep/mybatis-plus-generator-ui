@@ -1,10 +1,10 @@
 <template>
   <el-form ref="editForm" :model="form" label-width="180px" size="mini">
-    <el-form-item label="Service superclass name">
+    <el-form-item label="상위 클래스">
       <el-input v-model="form.superServiceClass"></el-input>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">Save</el-button>
+      <el-button type="primary" @click="onSubmit">저장</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -38,7 +38,7 @@ export default {
       axios
         .post("/api/output-file-info/save-service-strategy", this.form)
         .then(res => {
-          this.$message.success("Message saved successfully");
+          this.$message.success("저장했습니다");
         });
     }
   }

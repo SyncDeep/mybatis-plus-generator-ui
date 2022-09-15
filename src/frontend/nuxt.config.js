@@ -79,7 +79,7 @@ module.exports = {
   /*
    ** Plugins to load before mounting the App
    */
-  plugins: ["@/plugins/element-ui", "@/plugins/axios", "@/plugins/components"],
+  plugins: ["@/plugins/element-ui", "@/plugins/codemirror", "@/plugins/axios", "@/plugins/components"],
   generate: {
     /*
      ** Specifies the output directory for compiled files

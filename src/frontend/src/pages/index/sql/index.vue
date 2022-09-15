@@ -3,25 +3,21 @@
     <div class="content-header"></div>
     <div class="content">
       <div class="container">
-        <div style="margin-buttom:10px;"> Please enter the SQL statement to be converted：</div>
-        <el-alert title="Tip：" type="info" style="margin:10px;" show-icon :closable="false">
-          Supports dynamic parameters embedded in Mybatis in SQL, the system will automatically identify the parameters and generate corresponding conditional control statements
-          <a
-            href="javascript:;"
-            @click="showDynamicParamsDemo = true"
-          >View Example</a>
+        <div style="margin-buttom:10px;">코드 생성할 SQL문을 입력하세요</div>
+        <el-alert title="Tip：MyBatis의 동적 SQL문을 생성합니다. 조회 조건을 자동 분석해서 Mybatis XML을 생성합니다" type="info" style="margin:10px;" show-icon :closable="false">
+          <el-button type="info" @click="showDynamicParamsDemo = true" icon="el-icon-view">예제</el-button>
         </el-alert>
         <codemirror v-model="sqlCode" :options="cmOptions" />
-        <el-dialog title="SQL to code output configuration" :visible.sync="showDtoConfig" width="60%" top="5vh">
+        <el-dialog title="SQL 기반 코드 생성 설정" :visible.sync="showDtoConfig" width="60%" top="5vh">
           <dto-strategy-form :sql="encodedSQL" @done="showDtoConfig = false"></dto-strategy-form>
         </el-dialog>
         <div style="margin-top:10px">
-          <el-button type="primary" @click="genDtoFile">Generate Mapper method & DTO</el-button>
+          <el-button type="primary" @click="genDtoFile">코드 생성</el-button>
         </div>
       </div>
       <el-dialog
         :modal="false"
-        title="Dynamic SQL Enhancement Example"
+        title="SQL 예제"
         :visible.sync="showDynamicParamsDemo"
         width="80%"
         top="5vh"
@@ -32,12 +28,7 @@
   </div>
 </template>
 <script>
-import { codemirror } from "vue-codemirror";
-import "codemirror/mode/sql/sql.js";
-import "codemirror/lib/codemirror.css";
-import "codemirror/theme/solarized.css";
 import HelpTip from "@/components/HelpTip";
-import Axios from "axios";
 import { Base64 } from "js-base64";
 import DtoStrategyForm from "@/components/DtoStrategyForm";
 import DynamicSqlDemo from "@/components/DynamicSqlDemo";
@@ -45,7 +36,6 @@ import DynamicSqlDemo from "@/components/DynamicSqlDemo";
 export default {
   components: {
     DynamicSqlDemo,
-    codemirror,
     HelpTip,
     DtoStrategyForm,
   },
@@ -67,8 +57,9 @@ export default {
   },
   methods: {
     genDtoFile() {
+      debugger
       if (!this.sqlCode) {
-        this.$message.error("Please enter the SQL statement first");
+        this.$message.error("SQL을 입력하세요");
         return;
       }
       this.encodedSQL = Base64.encodeURI(this.sqlCode);

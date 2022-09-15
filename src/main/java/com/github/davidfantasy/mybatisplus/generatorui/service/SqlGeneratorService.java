@@ -74,11 +74,11 @@ public class SqlGeneratorService {
 
     public void genMapperMethod(GenDtoFromSqlReq params) throws Exception {
         if (Strings.isNullOrEmpty(params.getSql())) {
-            throw new ServiceException("数据源SQL不能为空");
+            throw new ServiceException("SQL문은 필수입니다");
         }
         String decodedSql = new String(decoder.decode(params.getSql()), "UTF-8");
         if (!decodedSql.trim().toLowerCase().startsWith("select")) {
-            throw new ServiceException("只能通过查询语句生成DTO对象，请检查SQL");
+            throw new ServiceException("DTO는 query문을 통해서만 생성됩니다. SQL문을 확인하세요.");
         }
         if (!Strings.isNullOrEmpty(params.getConfig().getFullPackage())) {
             try {
@@ -91,7 +91,7 @@ public class SqlGeneratorService {
             genDtoFileFromSQL(decodedSql, params.getConfig());
         }
         String namespace = genMapperElementsFromSql(decodedSql, params.getConfig());
-        //在Dao中插入与Mapper节点对应的方法
+        //Dao에 Mapper 노드에 해당하는 메소드 삽입
         if (params.getConfig().getEnableCreateDaoMethod()) {
             if ("bean".equals(params.getConfig().getDaoMethodParamType())) {
                 genParamDtoFromSql(decodedSql, params.getConfig().getDaoMethodParamDto(), params.getConfig().isEnableLombok());
@@ -106,8 +106,8 @@ public class SqlGeneratorService {
         try {
             rowSet = jdbcTemplate.queryForRowSet(sql);
         } catch (Exception e) {
-            log.error("执行SQL发生错误", e);
-            throw new ServiceException("执行SQL发生错误：" + e.getMessage());
+            log.error("SQL 실행 오류", e);
+            throw new ServiceException("SQL 실행 오류：" + e.getMessage());
         }
         SqlRowSetMetaData metaData = rowSet.getMetaData();
         int columnCount = metaData.getColumnCount();
@@ -117,7 +117,7 @@ public class SqlGeneratorService {
         for (int i = 1; i <= columnCount; i++) {
             DtoFieldInfo resultField = new DtoFieldInfo();
             resultField.setColumnName(metaData.getColumnLabel(i));
-            //将数据库类型转换为java类型
+            //데이터베이스 유형을 Java 유형으로 변환
             String colType = metaData.getColumnTypeName(i);
             IColumnType columnType = dataSourceConfig.getTypeConvert().processTypeConvert(mbpConfig, metaData.getColumnTypeName(i));
             resultField.setShortJavaType(columnType.getType());
@@ -130,23 +130,23 @@ public class SqlGeneratorService {
         config.setFields(fields);
         config.setCreateDate(DateUtil.format(new Date(), "yyyy-MM-dd"));
         if (!Strings.isNullOrEmpty(config.getMapperLocation())) {
-            config.setComment(config.getMapperLocation() + "的查询结果集，该代码由mybatis-plus-generator-ui自动生成");
+            config.setComment(config.getMapperLocation() + " 코드의 쿼리 결과 세트는 mybatis-plus-generator-ui에 의해 자동으로 생성됩니다.");
         } else {
-            config.setComment("该代码由mybatis-plus-generator-ui自动生成");
+            config.setComment("코드는 mybatis-plus-generator-ui에 의해 자동으로 생성됩니다.");
         }
         genDtoFromConfig(config);
     }
 
     public String genMapperElementsFromSql(String sql, GenDtoConfig config) throws IOException, DocumentException {
         List<MapperElement> elements = Lists.newArrayList();
-        //如果DTO是自动生成的，那么同时也生成结果映射集
+        //DTO가 자동으로 생성되면 결과 ResultMap도 동시 생성
         if (config.getResultMap() != null) {
             elements.add(createResultMapElement(config));
         }
         elements.add(createMapperMethodElement(sql, config));
         String mapperPath = projectPathResolver.convertPackageToPath(config.getMapperPackage()) + DOT_XML;
         String namespace = mapperXmlParser.addElementInMapper(mapperPath, elements.toArray(new MapperElement[]{}));
-        log.info("ResultMap和Mapper方法已生成，输出位置为:" + mapperPath);
+        log.info("ResultMap 및 Mapper 메소드가 생성되고 출력 위치 :" + mapperPath);
         return namespace;
     }
 
@@ -155,7 +155,7 @@ public class SqlGeneratorService {
         tplParams.put("config", config);
         String resultMapStr = beetlTemplateEngine.write2String(tplParams, "classpath:codetpls/resultMap.btl");
         MapperElement resultMapEle = MapperElement.builder().id(config.getDtoName() + "Map")
-                .comment("Author:" + config.getAuthor() + "，Date:" + DateUtil.format(new Date(), "yyyy-MM-dd") + "，" + config.getMapperElementId() + "的结果映射配置，由mybatis-plus-generator-ui自动生成")
+                .comment("Author:" + config.getAuthor() + "，Date:" + DateUtil.format(new Date(), "yyyy-MM-dd") + "，" + config.getMapperElementId() + " mybatis-plus-generator-ui에 의해 자동으로 생성된 결과 매핑 구성")
                 .content(resultMapStr)
                 .location(ElementPosition.FIRST).build();
         return resultMapEle;
@@ -172,7 +172,7 @@ public class SqlGeneratorService {
         tplParams.put("sql", sql);
         String methodEleStr = beetlTemplateEngine.write2String(tplParams, "classpath:codetpls/mapperMethods.btl");
         MapperElement methodEle = MapperElement.builder().id(config.getMapperElementId())
-                .comment("Author:" + config.getAuthor() + "，Date:" + DateUtil.format(new Date(), "yyyy-MM-dd") + ",由mybatis-plus-generator-ui自动生成")
+                .comment("Author:" + config.getAuthor() + "，Date:" + DateUtil.format(new Date(), "yyyy-MM-dd") + ",mybatis-plus-generator-ui에 의해 자동 생성됨")
                 .content(methodEleStr)
                 .location(ElementPosition.LAST).build();
         return methodEle;
@@ -181,7 +181,7 @@ public class SqlGeneratorService {
     public void genParamDtoFromSql(String sql, String paramDtoRef, boolean enableLombok) throws Exception {
         List<ConditionExpr> conditionExprs = dynamicParamSqlEnhancer.parseSqlDynamicConditions(sql);
         if (conditionExprs.isEmpty()) {
-            log.info("未检测到SQL的动态参数，忽略参数DTO的生成");
+            log.info("SQL 동적 매개변수 없음, DTO 생성 무시");
             return;
         }
         List<DtoFieldInfo> fields = parseParamFieldsFromSql(sql);
@@ -194,19 +194,19 @@ public class SqlGeneratorService {
         config.setFields(fields);
         config.setCreateDate(DateUtil.format(new Date(), "yyyy-MM-dd"));
         if (!Strings.isNullOrEmpty(config.getMapperLocation())) {
-            config.setComment(config.getMapperLocation() + "的查询参数Bean，该代码由mybatis-plus-generator-ui自动生成");
+            config.setComment(config.getMapperLocation() + " 코드는 mybatis-plus-generator-ui에 의해 자동으로 생성됩니다");
         } else {
-            config.setComment("该代码由mybatis-plus-generator-ui自动生成");
+            config.setComment("코드는 mybatis-plus-generator-ui에 의해 자동으로 생성됩니다.");
         }
         genDtoFromConfig(config);
     }
 
     /**
-     * 根据相关配置生成DAO中的查询方法
+     * 관련 구성을 기반으로 DAO에서 쿼리 메서드 생성
      *
-     * @param daoClassRef DAO的引用位置
-     * @param sql         查询SQL语句
-     * @param config      配置参数
+     * @param daoClassRef DAO 위치
+     * @param sql         SQL
+     * @param config      설정 정보
      */
     public void addDaoMethod(String daoClassRef, String sql, GenDtoConfig config) throws Exception {
         Set<String> imports = Sets.newHashSet();
@@ -222,7 +222,7 @@ public class SqlGeneratorService {
             imports.add("java.util.Map");
             returnType = "List<Map<String,Object>>";
         }
-        //如果启用分页查询，则修改相关的参数和返回值
+        //페이징 쿼리가 활성화된 경우 관련 매개변수 및 반환 값 수정
         if (config.isEnablePageQuery()) {
             imports.add("com.baomidou.mybatisplus.extension.plugins.pagination.Page");
             returnType = returnType.replaceFirst("List", "Page");
@@ -318,7 +318,7 @@ public class SqlGeneratorService {
             file.createNewFile();
         }
         beetlTemplateEngine.writer(tplParams, "classpath:codetpls/dto.btl", outputPath);
-        log.info("DTO已成功生成，输出位置为:" + outputPath);
+        log.info("DTO 생성 성공적 :" + outputPath);
     }
 
 

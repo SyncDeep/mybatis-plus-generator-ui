@@ -7,19 +7,16 @@
           <el-input
             clearable
             style="width: 300px; margin-right: 20px"
-            placeholder="Please enter the table name to query"
+            placeholder="테이블 이름"
             prefix-icon="el-icon-search"
             v-model="searchKey"
           ></el-input>
-          <el-button type="primary" @click="openGenSetting">代码生成</el-button>
-          <span style="color: #e6a23c; font-size: 14px" v-if="isNewProject"
-            >The current project has not saved the custom configuration, the default configuration will be used. You can also <a
-              href="#"
-              @click="openImportProjectView"
-              >import</a
-            >Configuration of other projects, or custom
-            <router-link to="/config">Configure</router-link>
-          </span>
+          <el-button type="primary" @click="openGenSetting">코드 생성</el-button>
+          <div style="color: #e6a23c; font-size: 14px" v-if="isNewProject">
+            <div>설정 정보가 등록되지 않아 기본 설정 정보로 코드를 생성합니다.</div>
+            <el-button type="info" @click="openImportProjectView" icon="el-icon-upload2">설정 불러오기</el-button>
+            <el-button type="info" @click="$router.push('/config');" icon="el-icon-edit">설정</el-button>
+          </div>
         </div>
         <el-table
           ref="tableList"
@@ -32,33 +29,33 @@
           <el-table-column
             type="index"
             width="50"
-            label="Serial numbe"
+            label="번호"
           ></el-table-column>
-          <el-table-column sortable prop="name" label="table name">
+          <el-table-column sortable prop="name" label="테이블">
             <template slot-scope="scope">{{ scope.row.name }}</template>
           </el-table-column>
-          <el-table-column prop="comment" label="table comment"></el-table-column>
+          <el-table-column prop="comment" label="설명"></el-table-column>
         </el-table>
       </div>
     </div>
     <el-dialog
       :visible.sync="showGenSettingDialog"
-      title="Output Configuration"
+      title="코드 생성 설정"
       width="70%"
       top="5vh"
     >
       <el-form label-width="220px">
-        <el-form-item label="Code Author">
+        <el-form-item label="작성자">
           <el-input v-model="genSetting.author" style="width: 260px"></el-input>
         </el-form-item>
-        <el-form-item label="Module name">
+        <el-form-item label="모듈명">
           <el-input
             v-model="genSetting.moduleName"
-            placeholder="The module name will be added to the output package name to separate different modules "
+            placeholder="모듈명은 패키지명에 포합됩니다"
             style="width: 400px"
           ></el-input>
         </el-form-item>
-        <el-form-item label="The file to be generated this time">
+        <el-form-item label="생성 유형">
           <el-checkbox-group v-model="genSetting.choosedOutputFiles">
             <el-checkbox
               v-for="file in userConfig.outputFiles"
@@ -68,33 +65,33 @@
             >
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="Controller method to be generated" v-if="isControllerChecked">
+        <el-form-item label="Controller 메소드" v-if="isControllerChecked">
           <el-alert
-            title="Note: If the template of the Controller is changed, the following options may not take effect and need to be implemented in the template by yourself"
+            title="Note: 템플릿이 변경되면 아래 설정 관련 부분도 구현해야 합니다"
             type="warning"
           ></el-alert>
           <el-checkbox-group v-model="genSetting.choosedControllerMethods">
-            <el-checkbox label="list" key="list">List query</el-checkbox>
-            <el-checkbox label="getById" key="getById">Query by ID</el-checkbox>
-            <el-checkbox label="create" key="create">Add</el-checkbox>
-            <el-checkbox label="update" key="update">Update</el-checkbox>
-            <el-checkbox label="delete" key="delete">Delete</el-checkbox>
+            <el-checkbox label="list" key="list">목록 조회</el-checkbox>
+            <el-checkbox label="getById" key="getById">아이디 조회</el-checkbox>
+            <el-checkbox label="create" key="create">등록</el-checkbox>
+            <el-checkbox label="update" key="update">수정</el-checkbox>
+            <el-checkbox label="delete" key="delete">삭제</el-checkbox>
           </el-checkbox-group>
         </el-form-item>
-        <el-form-item label="Whether to overwrite if there is a file with the same name">
+        <el-form-item label="덮어쓰기 여부">
           <el-switch v-model="genSetting.override"></el-switch>
         </el-form-item>
-        <el-form-item label="Target item root directory">
+        <el-form-item label="생성 폴더">
           <el-input
             v-model="genSetting.rootPath"
             style="width: 400px"
           ></el-input>
           <help-tip
-            content="The final generated code location: the root directory of the target project + the package directory set by the source code of a specific category"
+            content="생성 위치 : 생성 폴더 + 패키지명"
           ></help-tip>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="genCode()">Start generation</el-button>
+          <el-button type="primary" @click="genCode()">생성</el-button>
         </el-form-item>
       </el-form>
     </el-dialog>
@@ -110,7 +107,7 @@
             {{ scope.row }}
           </template>
         </el-table-column>
-        <el-table-column label="导入">
+        <el-table-column label="Import">
           <template slot-scope="scope">
             <el-button
               type="info"
@@ -203,7 +200,7 @@ export default {
     },
     openGenSetting() {
       if (this.choosedTables.length === 0) {
-        this.$message.warning("Please select at least one data table ");
+        this.$message.warning("선택된 테이블이 없습니다");
         return;
       }
       //Get the last build configuration
@@ -227,10 +224,10 @@ export default {
     },
     genCode() {
       this.$confirm(
-        "Confirm to generate selected'" +
+        "선택된 " +
           this.choosedTables.length +
-          " business code for a data sheet?",
-        "Operation",
+          "개의 테이블에 대한 코드를 생성하시겠습니까?",
+        "작업",
         {
           type: "warning",
         }
@@ -245,7 +242,7 @@ export default {
           .post("/api/mbp-generator/gen-code", params)
           .then((res) => {
             this.$message({
-              message: "Business code has been generated",
+              message: "코드 생성 완료",
               type: "success",
             });
             aLoading.close();
@@ -265,14 +262,14 @@ export default {
       });
     },
     importProjectConfig(sourceProjectPkg) {
-      this.$confirm("Are you sure about importing " + sourceProjectPkg + "Configuration？")
+      this.$confirm(sourceProjectPkg + " 설정 정보를 Import하시겠습니까?")
         .then(() => {
           axios
             .post(
               "/api/output-file-info/import-project-config/" + sourceProjectPkg
             )
             .then(() => {
-              this.$message.success("Configuration imported");
+              this.$message.success("설정 정보를 import했습니다");
               this.showSavedProjectsDialog = false;
               setTimeout(() => {
                 window.location.reload();

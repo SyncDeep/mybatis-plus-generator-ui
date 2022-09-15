@@ -13,7 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 用于全局异常处理
+ * global exception handling
  */
 @ControllerAdvice
 @Slf4j
@@ -23,16 +23,16 @@ public class WebControllerAdvice {
     @ResponseBody
     public Result exceptionHandler(HttpServletRequest request, Exception e) {
         Result result = new Result();
-        log.info("未捕获的异常：" + e.getMessage(), e);
+        log.info("Uncaught exception：" + e.getMessage(), e);
         if (e instanceof ServiceException) {
             result.setCode(ResultCode.FAIL).setMessage(e.getMessage());
         } else if (e instanceof NoHandlerFoundException) {
-            result.setCode(ResultCode.NOT_FOUND).setMessage("接口 [" + request.getRequestURI() + "] 不存在");
+            result.setCode(ResultCode.NOT_FOUND).setMessage("Interface [" + request.getRequestURI() + "] does not exist");
         } else if (e instanceof ServletException) {
             result.setCode(ResultCode.FAIL).setMessage(e.getMessage());
         } else {
-            result.setCode(ResultCode.INTERNAL_SERVER_ERROR).setMessage("系统发生内部错误，请联系管理员");
-            log.error("系统发生内部错误，请查看控制台日志了解详情", e);
+            result.setCode(ResultCode.INTERNAL_SERVER_ERROR).setMessage("An internal system error occurred, please contact the administrator");
+            log.error("An internal error occurred in the system, please check the console log for details", e);
         }
         return result;
     }

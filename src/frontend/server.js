@@ -3,8 +3,9 @@ const {
   Builder
 } = require('nuxt')
 const app = require('express')()
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const port = process.env.PORT || 3000
-var proxyMiddleware = require('http-proxy-middleware')
+
 // Initialize Nuxt.js instance by passing in configuration
 let config = require('./nuxt.config.js')
 const nuxt = new Nuxt(config)
@@ -18,7 +19,7 @@ Object.keys(proxyTable).forEach(function (context) {
       target: options
     }
   }
-  app.use(proxyMiddleware(options.filter || context, options))
+  app.use(createProxyMiddleware(options.filter || context, options))
 })
 app.use(nuxt.render) //Here is the middleware that adds the nuxt rendering layer service
 

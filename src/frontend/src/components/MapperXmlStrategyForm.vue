@@ -1,13 +1,13 @@
 <template>
   <el-form ref="editForm" :model="form" label-width="180px" size="mini">
-    <el-form-item label="Whether to generate baseResultMap" placeholder>
+    <el-form-item label="baseResultMap 생성" placeholder>
       <el-switch v-model="form.baseResultMap"></el-switch>
     </el-form-item>
-    <el-form-item label="Whether to add the second level cache configuration in xml " placeholder>
+    <el-form-item label="Second Level cache 설정(xml)" placeholder>
       <el-switch v-model="form.enableCache"></el-switch>
     </el-form-item>
     <el-form-item>
-      <el-button type="primary" @click="onSubmit">Save</el-button>
+      <el-button type="primary" @click="onSubmit">저장</el-button>
     </el-form-item>
   </el-form>
 </template>
@@ -42,7 +42,7 @@ export default {
       axios
         .post("/api/output-file-info/save-mapper-xml-strategy", this.form)
         .then(res => {
-          this.$message.success("Message saved successfully");
+          this.$message.success("저장했습니다");
         });
     }
   }

@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Mapper XML的相关操作接口
+ * Mapper XML Parser
  */
 @Component
 public class MapperXmlParser {
@@ -38,7 +38,7 @@ public class MapperXmlParser {
     public String addElementInMapper(String mapperPath, MapperElement... elements) throws IOException, DocumentException {
         File mapperFile = new File(mapperPath);
         if (!mapperFile.exists()) {
-            throw new ServiceException("XML文件不存在：" + mapperPath);
+            throw new ServiceException("XML 파일이 존재하지 않습니다 ：" + mapperPath);
         }
         Document doc = reader.read(new FileInputStream(mapperFile));
         List<Node> mapperNodes = doc.getRootElement().content();
